@@ -8,6 +8,7 @@ export type Time = string | null;
 const App = () => {
   const [time, setTime] = useState<Time>(null);
   const [error, setError] = useState<string | null>(null);
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -20,7 +21,7 @@ const App = () => {
         setTime(data.datetime);
       } catch (err) {
         if (err instanceof Error) {
-          setError(err.message);
+          setError(`${err.message}. Попробуйте обновить страницу`);
         } else {
           setError('An unknown error occurred');
         }
@@ -51,7 +52,16 @@ const App = () => {
     return <div>Error: {error}</div>;
   }
 
-  return !time ? <div className="loader" /> : <Clock time={time} />;
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light')
+    localStorage.setItem('theme', theme);
+  };
+
+  return (
+    <div className={theme === 'light' ? 'dark' : 'light'}>
+      {!time ? <div className="loader" /> : <Clock time={time} toggleTheme={toggleTheme} themeDark={theme === 'dark'} />}
+    </div>
+  );
 };
 
 export default App;

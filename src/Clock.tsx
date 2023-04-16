@@ -1,4 +1,9 @@
-const Clock = ({ time }: { time: string | null }) => {
+interface ClockProps {
+  toggleTheme: VoidFunction;
+  time: string | null;
+  themeDark: boolean;
+}
+const Clock = ({ time, toggleTheme, themeDark }: ClockProps) => {
   const timeArray: Date = new Date(time || '');
 
   const addLeadingZero = (number: number): string => {
@@ -9,7 +14,7 @@ const Clock = ({ time }: { time: string | null }) => {
     <>
       <div className="clock">
         <div
-          className="hour"
+          className={'hour'}
           style={{
             transform: `rotateZ(${timeArray.getHours() * 30}deg)`,
           }}
@@ -39,8 +44,11 @@ const Clock = ({ time }: { time: string | null }) => {
         <span className="ten">10</span>
         <span className="eleven">11</span>
       </div>
+      <button onClick={toggleTheme}>Переключить тему</button>
       <div className="clockSeconds">
-        {`${addLeadingZero(timeArray.getHours())}:${addLeadingZero(timeArray.getMinutes())}:${addLeadingZero(timeArray.getSeconds())}`}
+        {`${addLeadingZero(timeArray.getHours())}:${addLeadingZero(
+          timeArray.getMinutes()
+        )}:${addLeadingZero(timeArray.getSeconds())}`}
       </div>
     </>
   );
