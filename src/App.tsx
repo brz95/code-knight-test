@@ -7,13 +7,24 @@ export type Time = string | null;
 
 const App = () => {
   const [time, setTime] = useState<Time>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchApi = async () => {
-      const response = await fetch(url);
-      const data = await response.json();
-
-      setTime(data.datetime);
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setTime(data.datetime);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
+      }
     };
 
     fetchApi();
@@ -36,7 +47,11 @@ const App = () => {
     }
   }, [time]);
 
-  return !time ? <div className='loader' /> : <Clock time={time} />;
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return !time ? <div className="loader" /> : <Clock time={time} />;
 };
 
 export default App;
