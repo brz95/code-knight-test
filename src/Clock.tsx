@@ -1,5 +1,10 @@
 const Clock = ({ time }: { time: string | null }) => {
   const timeArray: Date = new Date(time || '');
+
+  const addLeadingZero = (number: number): string => {
+    return number < 10 ? '0' + number : number.toString();
+  };
+
   return (
     <>
       <div className="clock">
@@ -35,7 +40,7 @@ const Clock = ({ time }: { time: string | null }) => {
         <span className="eleven">11</span>
       </div>
       <div className="clockSeconds">
-        {`${timeArray.getHours()}:${timeArray.getMinutes()}:${timeArray.getSeconds()}`}
+        {`${addLeadingZero(timeArray.getHours())}:${addLeadingZero(timeArray.getMinutes())}:${addLeadingZero(timeArray.getSeconds())}`}
       </div>
     </>
   );

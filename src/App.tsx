@@ -3,7 +3,7 @@ import Clock from './Clock';
 
 const url = 'https://worldtimeapi.org/api/timezone/Europe/Moscow';
 
-export type Time = string | null
+export type Time = string | null;
 
 const App = () => {
   const [time, setTime] = useState<Time>(null);
@@ -16,12 +16,27 @@ const App = () => {
       setTime(data.datetime);
     };
 
-    const timer = setInterval(fetchApi, 1000);
+    fetchApi();
+  }, []);
 
-    return () => clearInterval(timer);
+  useEffect(() => {
+    if (time) {
+      const timer = setTimeout(() => {
+        setTime((prevTime) => {
+          if (prevTime) {
+            const currentTime = new Date(prevTime);
+            currentTime.setSeconds(currentTime.getSeconds() + 1);
+            return currentTime.toISOString();
+          }
+          return prevTime;
+        });
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
   }, [time]);
-  
-  return !time ? <div className='loader' />: <Clock time={time} />;
+
+  return !time ? <div className='loader' /> : <Clock time={time} />;
 };
 
 export default App;
